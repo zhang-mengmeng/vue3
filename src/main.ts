@@ -6,6 +6,6 @@ import 'element-plus/dist/index.css'
 import App from './App.vue'
 import Lei from './index.ts'
 
-new Lei()
+// new Lei()
 
 createApp(App).use(ElementPlus).mount('#app')

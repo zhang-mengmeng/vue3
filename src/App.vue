@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 10px;">
-    <el-form :inline="true" :model="formInline" class="demo-form-inline" >
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="用户名称">
         <el-input v-model="formInline.user" placeholder="请输入用户名称" clearable />
       </el-form-item>
@@ -14,7 +14,7 @@
         </el-select>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary"  @click="onSubmit">搜 索</el-button>
+        <el-button type="primary" @click="onSubmit">搜 索</el-button>
       </el-form-item>
 
     </el-form>
@@ -69,52 +69,71 @@
 
 <script setup lang="ts">
 import { reactive, ref } from 'vue'
-import type { ComponentSize, FormInstance, FormRules } from 'element-plus'
-import { ElMessage } from 'element-plus'
+import type { FormInstance, FormRules } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 const formInline = reactive({
   user: '',
-  age:'',
-  sex:''
+  age: '',
+  sex: ''
 })
 
 const onSubmit = () => {
-  fetch('http://8.152.220.74:3000/chax',{
-    method:'post',
-    headers:{
-      "content-type":"application/json"
+  fetch('http://localhost:3000/users', {
+    method: 'post',
+    headers: {
+      "content-type": "application/json"
     },
-    body:JSON.stringify({
-      name:formInline.user,
-      age:formInline.age,
-      sex:formInline.sex
+    body: JSON.stringify({
+      name: formInline.user,
+      age: formInline.age,
+      sex: formInline.sex
     })
-  }).then(res =>{
+  }).then(res => {
     return res.json()
-  }).then(data =>{
-    if(data.code == 200) {
+  }).then(data => {
+    if (data.code == 200) {
       tableData.splice(0, tableData.length)
-        tableData.push(...data.data)
+      tableData.push(...data.data)
     }
   })
 }
 let tableData = reactive<any[]>([])
 //删除
 const handleClick = (row: any) => {
-  const xhr = new XMLHttpRequest()
-  xhr.open('get', `http://8.152.220.74:3000/del?id=` + row)
-  xhr.setRequestHeader("Content-Type", "application/json")
-  xhr.addEventListener('load', () => {
-    if (xhr.status == 200) {
-      let data = JSON.parse(xhr.responseText)
-      ElMessage({
-        message: data.msg,
-        type: 'success',
-      })
-      getlist()
-
+  ElMessageBox.confirm(
+    `您确定要删除用户ID为 ${row} 的用户吗?`,
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
     }
-  })
-  xhr.send(null)
+  )
+    .then(() => {
+
+      const xhr = new XMLHttpRequest()
+      xhr.open('delete', `http://localhost:3000/user/` + row)
+      xhr.setRequestHeader("Content-Type", "application/json")
+      xhr.addEventListener('load', () => {
+        if (xhr.status == 200) {
+          let data = JSON.parse(xhr.responseText)
+          ElMessage({
+            message: data.msg,
+            type: 'success',
+          })
+          getlist()
+
+        }
+      })
+      xhr.send(null)
+    })
+    .catch(() => {
+      ElMessage({
+        type: 'info',
+        message: '取消删除',
+      })
+    })
+
 }
 const formLabelWidth = '140px'
 
@@ -130,7 +149,7 @@ const form = reactive<RuleForm>({
   sex: '',
 })
 let dialogFormVisible = ref(false)
-const handleadd = (data:number) => {
+const handleadd = (data: number) => {
   aa.value.bb = data
   dialogFormVisible.value = true
   form.name = ''
@@ -180,21 +199,21 @@ const queding = async (formEl: FormInstance | undefined) => {
   await formEl.validate((valid, fields) => {
     if (valid) {
       if (aa.value.bb == 1) {
-        fetch('http://8.152.220.74:3000/user',{
-          method:'put',
-          headers:{
+        fetch('http://localhost:3000/user', {
+          method: 'put',
+          headers: {
             "content-type": 'application/json'
           },
-          body:JSON.stringify({
-            id:aa.value.id,
-            name:form.name,
-            age:form.age,
-            sex:form.sex
+          body: JSON.stringify({
+            id: aa.value.id,
+            name: form.name,
+            age: form.age,
+            sex: form.sex
           })
-        }).then(res =>{
+        }).then(res => {
           return res.json()
-        }).then(data =>{
-          if(data.code == 200) {
+        }).then(data => {
+          if (data.code == 200) {
             ElMessage({
               message: data.msg,
               type: 'success',
@@ -204,7 +223,7 @@ const queding = async (formEl: FormInstance | undefined) => {
           }
         })
       } else {
-        fetch('http://8.152.220.74:3000/add', {
+        fetch('http://localhost:3000/user', {
           method: 'post',
           headers: {
             "content-type": 'application/json'
@@ -235,7 +254,7 @@ const queding = async (formEl: FormInstance | undefined) => {
 }
 const getlist = () => {
   const xhr = new XMLHttpRequest()
-  xhr.open('GET', 'http://8.152.220.74:3000/list')
+  xhr.open('GET', 'http://localhost:3000/users')
   xhr.addEventListener('load', () => {
     if (xhr.status == 200) {
       let aa = JSON.parse(xhr.response)
@@ -250,22 +269,16 @@ const getlist = () => {
 getlist()
 type M = {
   bb: number,
-  id:number
+  id: number
 }
-const aa = ref<M>({ bb: 0,id:0 })
+const aa = ref<M>({ bb: 0, id: 0 })
 
 // 编辑
 const handleaddd = (row: any, data: number) => {
   aa.value.bb = data
   aa.value.id = row
-  fetch('http://8.152.220.74:3000/cha', {
-    method: 'post',
-    headers: {
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify({
-      id: row
-    })
+  fetch('http://localhost:3000/user/' + row, {
+    method: 'get',
   }).then(res => {
     return res.json()
   }).then(data => {

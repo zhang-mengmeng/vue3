@@ -4,10 +4,10 @@ import path from 'path'
 import dayjs from 'dayjs'
 const app = express()
 app.use('*',(req,res,next) =>{
-    res.setHeader('Access-Control-Allow-Origin','http://localhost:5173')
+    res.setHeader('Access-Control-Allow-Origin','*')
     res.setHeader('Access-Control-Allow-Credentials','true')
     res.setHeader('Access-Control-Allow-Headers','content-type')
-    res.setHeader('Access-Control-Allow-Methods','PUT')
+    res.setHeader('Access-Control-Allow-Methods','PUT,DELETE')
     next()
 })
 
@@ -15,15 +15,15 @@ app.use(express.json())
 
 
 
-app.post('/track',(req,res) => {
-    fs.writeFileSync(path.join(process.cwd(),'./datalist.json'),JSON.stringify(req.body),{
-        encoding:'utf-8',
-        flag:'a'
-    })
-})
+// app.post('/track',(req,res) => {
+//     fs.writeFileSync(path.join(process.cwd(),'./datalist.json'),JSON.stringify(req.body),{
+//         encoding:'utf-8',
+//         flag:'a'
+//     })
+// })
 
 // 用户新增接口
-app.post('/add',(req,res)=>{
+app.post('/user',(req,res)=>{
     let randomFiveDigit = Math.floor(10000 + Math.random() * 90000);
     let dataObject = {
         dt:dayjs(new Date()).format('YYYY-MM-DD HH:mm:ss'),
@@ -44,6 +44,7 @@ app.post('/add',(req,res)=>{
                 encoding:'utf-8'
             })
         }
+        console.log('123')
      res.json({
         code:200,
         msg:'新增成功'
@@ -53,7 +54,7 @@ app.post('/add',(req,res)=>{
 })
 
 // 获取用户列表接口
-app.get('/list',(req,res) =>{
+app.get('/users',(req,res) =>{
     fs.readFile(path.join(process.cwd(),'./data.json'),{
         encoding:'utf-8'
     },(err,data) =>{
@@ -72,7 +73,8 @@ app.get('/list',(req,res) =>{
 })
 
 // 删除用户
-app.get('/del',(req,res) =>{
+app.delete('/user/:id',(req,res) =>{
+    console.log('进入')
     fs.readFile(path.join(process.cwd(),'./data.json'),{
         encoding:'utf-8'
     },(err,data) =>{
@@ -93,13 +95,13 @@ app.get('/del',(req,res) =>{
 })
 
 // 查询用户
-app.post('/cha',(req,res) =>{
+app.get('/user/:id',(req,res) =>{
     fs.readFile(path.join(process.cwd(),'./data.json'),{
         encoding:'utf-8'
     },(err,data) =>{
         let dataa = JSON.parse(data)
         dataa.forEach((item,index) =>{
-            if(item.id == req.body.id) {
+            if(item.id == req.params.id) {
                 res.json({
                     code:200,
                     msg:'查询成功',
@@ -135,7 +137,7 @@ app.put('/user',(req,res) =>{
     })
 })
 
-app.post('/chax',(req,res) =>{
+app.post('/users',(req,res) =>{
     const { name, sex, age } = req.body;
     fs.readFile(path.join(process.cwd(),'./data.json'),{
         encoding:'utf-8'

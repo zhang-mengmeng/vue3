@@ -4,6 +4,7 @@ const firsttime = (send:send) =>{
     let ftime = 0
     const ob = new MutationObserver((mutaions) =>{
         mutaions.forEach((mutaion)=>{
+            // console.log(mutaion)
             ftime = performance.now()
         })
         if(ftime > 0) {
