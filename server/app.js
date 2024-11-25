@@ -47,7 +47,6 @@ app.post('/user',(req,res)=>{
                 encoding:'utf-8'
             })
         }
-        console.log('123')
      res.json({
         code:200,
         msg:'新增成功'
@@ -77,14 +76,12 @@ app.get('/users',(req,res) =>{
 
 // 删除用户
 app.delete('/user/:id',(req,res) =>{
-    console.log('进入',req.params.id)
     fs.readFile(path.join(process.cwd(),'./data.json'),{
         encoding:'utf-8'
     },(err,data) =>{
         let adata = JSON.parse(data)
         adata.forEach((item,index)=>{
             if(item.id == req.params.id) {
-                console.log('执行')
                 adata.splice(index,1)
             }
         })

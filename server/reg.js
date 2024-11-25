@@ -55,7 +55,6 @@ router.post('/user', (req, res) => {
             msg: '请输入正确的用户名'
         })
     }
-    console.log(req.body)
 })
 
 export default router

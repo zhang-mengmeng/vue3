@@ -54,7 +54,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            fetch('http://8.152.220.74:3000/login/user', {
+            fetch('http://localhost:3000/login/user', {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
