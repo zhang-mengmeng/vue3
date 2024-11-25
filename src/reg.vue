@@ -1,4 +1,6 @@
 <template>
+    <router-link to="/user">用户页面</router-link>
+    <router-link to="/login" style="margin-left: 20px;">登陆页面</router-link>
     <div style="position: relative; height: 100vh;">
         <div class="box" style="position: absolute;">
             <h3 style="text-align: center;">注册用户</h3>
@@ -54,7 +56,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
     await formEl.validate((valid, fields) => {
         if (valid) {
-            fetch('http://localhost:3000/register/user', {
+            fetch('http://8.152.220.74:3000/register/user', {
                 method: 'post',
                 headers: {
                     'content-type': 'application/json'
