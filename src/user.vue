@@ -79,7 +79,7 @@
   })
   
   const onSubmit = () => {
-    fetch('http://localhost:3000/users', {
+    fetch('http://8.152.220.74:3000/users', {
       method: 'post',
       headers: {
         "content-type": "application/json"
@@ -113,7 +113,7 @@
       .then(() => {
   
         const xhr = new XMLHttpRequest()
-        xhr.open('delete', `http://localhost:3000/user/` + row)
+        xhr.open('delete', `http://8.152.220.74:3000/user/` + row)
         xhr.setRequestHeader("Content-Type", "application/json")
         xhr.addEventListener('load', () => {
           if (xhr.status == 200) {
@@ -200,7 +200,7 @@
     await formEl.validate((valid, fields) => {
       if (valid) {
         if (aa.value.bb == 1) {
-          fetch('http://localhost:3000/user', {
+          fetch('http://8.152.220.74:3000/user', {
             method: 'put',
             headers: {
               "content-type": 'application/json'
@@ -224,7 +224,7 @@
             }
           })
         } else {
-          fetch('http://localhost:3000/user', {
+          fetch('http://8.152.220.74:3000/user', {
             method: 'post',
             headers: {
               "content-type": 'application/json'
@@ -255,7 +255,7 @@
   }
   const getlist = () => {
     const xhr = new XMLHttpRequest()
-    xhr.open('GET', 'http://localhost:3000/users')
+    xhr.open('GET', 'http://8.152.220.74:3000/users')
     xhr.addEventListener('load', () => {
       if (xhr.status == 200) {
         let aa = JSON.parse(xhr.response)
@@ -278,7 +278,7 @@
   const handleaddd = (row: any, data: number) => {
     aa.value.bb = data
     aa.value.id = row
-    fetch('http://localhost:3000/user/' + row, {
+    fetch('http://8.152.220.74:3000/user/' + row, {
       method: 'get',
     }).then(res => {
       return res.json()
