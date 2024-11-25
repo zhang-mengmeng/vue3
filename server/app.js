@@ -2,6 +2,8 @@ import express from 'express'
 import fs from "node:fs"
 import path from 'path'
 import dayjs from 'dayjs'
+import login from './login.js'
+import register from './reg.js'
 const app = express()
 app.use('*',(req,res,next) =>{
     res.setHeader('Access-Control-Allow-Origin','*')
@@ -13,7 +15,8 @@ app.use('*',(req,res,next) =>{
 
 app.use(express.json())
 
-
+app.use('/register',register)
+app.use('/login',login)
 
 // app.post('/track',(req,res) => {
 //     fs.writeFileSync(path.join(process.cwd(),'./datalist.json'),JSON.stringify(req.body),{
@@ -74,13 +77,14 @@ app.get('/users',(req,res) =>{
 
 // 删除用户
 app.delete('/user/:id',(req,res) =>{
-    console.log('进入')
+    console.log('进入',req.params.id)
     fs.readFile(path.join(process.cwd(),'./data.json'),{
         encoding:'utf-8'
     },(err,data) =>{
         let adata = JSON.parse(data)
         adata.forEach((item,index)=>{
-            if(item.id == req.query.id) {
+            if(item.id == req.params.id) {
+                console.log('执行')
                 adata.splice(index,1)
             }
         })
